@@ -9,23 +9,25 @@ collectd经过一段时间的使用，感觉还是很方便的，各项监控数
 监控数据可以选择csv、rrd等多种形式存储，基本可以满足一般监控系统的展示需求。
 
 ###启动collectd
+cd collectd-5.4.1
 
 sbin/collectd
 
 ###关闭collectd
 
 ps -ef|grep collectd
+
 kill -9 pid
 
 
 ###日志、rrd文件等文件的路径
 所有文件的路径都可以collectd.conf文件中进行配置
 
-tail -f /data/collected-5.4.1/var/log/threshold.log 
+tail -f /data/collectd-5.4.1/var/log/threshold.log 
 
-tail -f /data/collected-5.4.1/var/log/collectd.log 
+tail -f /data/collectd-5.4.1/var/log/collectd.log 
 
-/data/collected-5.4.1/var/lib/collectd/rrd/yudf-204194/cpu-0
+/data/collectd-5.4.1/var/lib/collectd/rrd/172.30.204.218/cpu-0
 
 
 ###collectd-web
@@ -45,7 +47,7 @@ yum install perl-libwww-perl
 yum install perl-JSON
 
 
-###各种文件(自己定制的)的介绍
+###各种文件的介绍
 下面这些文件都是当时在使用collectd时根据具体业务需求编写的，仅供参考，不具有普遍意义。
 
 我们采用的是单服务端多客户端的方式进行部署的，所有数据都汇总到服务端的rrd文件中，配置了阀值报警，并通过触发脚本将报警信息上报到相关监控系统。
