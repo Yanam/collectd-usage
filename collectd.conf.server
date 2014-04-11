@@ -1,0 +1,82 @@
+
+Hostname    "172.30.204.218"
+FQDNLookup   true
+BaseDir     "/data/collectd-5.4.1/var/lib/collectd"
+PIDFile     "/data/collectd-5.4.1/var/run/collectd.pid"
+
+PluginDir   "/data/collectd-5.4.1/lib/collectd"
+TypesDB     "/data/collectd-5.4.1/share/collectd/types.db"
+
+#AutoLoadPlugin false
+
+Interval     10
+
+
+LoadPlugin "logfile"
+<Plugin "logfile">
+  LogLevel "info"
+  File "/data/collectd-5.4.1/var/log/collectd.log"
+  Timestamp true
+</Plugin>
+
+#LoadPlugin "cpu"
+#LoadPlugin "interface"
+#LoadPlugin "load"
+#LoadPlugin "memory"
+LoadPlugin "network"
+LoadPlugin "rrdtool"
+#LoadPlugin "csv"
+
+LoadPlugin "threshold"
+
+<Plugin "threshold">
+
+     <Type "cpu">
+       Instance "user"
+        WarningMax 85
+        Hits 1
+     </Type>
+   
+     <Plugin "memory">
+       <Type "memory">
+         Instance "free"
+        # 400MB
+         WarningMin 400000000
+        Persist true
+       </Type>
+     </Plugin>
+   
+     <Type "load">
+        FailureMax 4
+        Hits 3
+        Hysteresis 3
+     </Type>
+
+</Plugin>
+
+<Plugin "network">
+#       # server setup:
+        Listen "172.30.204.218" "25826"
+</Plugin>
+
+<Target "write">
+  Plugin "rrdtool"
+</Target>
+
+
+<Plugin "rrdtool">
+       DataDir "/data/collectd-5.4.1/var/lib/collectd/rrd"
+       CacheTimeout 120
+       CacheFlush 900
+        WritesPerSecond 60
+</Plugin>
+
+#<Plugin "csv">
+#  DataDir "/data/collectd-5.4.1/var/lib/collectd/csv"
+#  StoreRates true
+#</plugin>
+
+LoadPlugin "exec"
+<Plugin "exec">
+    NotificationExec    "root" "/data/collectd-5.4.1/etc/alarm.sh"
+</Plugin>

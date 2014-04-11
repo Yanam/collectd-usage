@@ -1,0 +1,46 @@
+Hostname    "172.30.204.194"
+FQDNLookup   true
+BaseDir     "/data/collectd-5.4.1/var/lib/collectd"
+PIDFile     "/data/collectd-5.4.1/var/run/collectd.pid"
+PluginDir   "/data/collectd-5.4.1/lib/collectd"
+TypesDB     "/data/collectd-5.4.1/share/collectd/types.db"
+
+Interval     60
+
+#ReadThreads 1
+
+#WriteThreads 1
+
+LoadPlugin "logfile"
+<Plugin "logfile">
+  LogLevel "info"
+  File "/data/collectd-5.4.1/var/log/collectd.log"
+  Timestamp true
+</Plugin>
+
+
+LoadPlugin "cpu"
+LoadPlugin "df"
+LoadPlugin "disk"
+LoadPlugin "interface"
+#LoadPlugin "load"
+LoadPlugin "memory"
+LoadPlugin "network"
+#LoadPlugin rrdtool
+
+
+<Plugin interface>
+       Interface "lo"
+       IgnoreSelected true
+</Plugin>
+<Plugin "df">
+  Device "/dev/hda1"
+  MountPoint "/home"
+  FSType "ext3"
+  IgnoreSelected false
+</Plugin>
+
+<Plugin "network">
+#       # client setup:
+        Server "172.30.204.218" "25826"
+</Plugin>
